@@ -25,12 +25,10 @@ public class MaxValue {
         for (int $ = 0; $ < 100000; $++) {
             final int[] array = new int[1000];
             Arrays.fill(array, new Random().nextInt(10000));
-            final int arrayLength = array.length;
-            final int THREAD_COUNT = 4; // description: ... that finds the maximum value in an array of ints using 4 threads.
             final List<MaxValueThread> maxValueThreads = new ArrayList<>();
+            final int evenWorkPortion = array.length / 4;
 
-            final int evenWorkPortion = arrayLength / THREAD_COUNT;
-            for (int i = 0; i < 4 && evenWorkPortion > 0; i++) {
+            for (int i = 0; i < 4; i++) {
                 final int low = i * evenWorkPortion;
                 final int high = low + evenWorkPortion;
                 maxValueThreads.add(new MaxValueThread(low, high, array));
