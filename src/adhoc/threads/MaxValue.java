@@ -22,6 +22,7 @@ import static common.SemaphoreUtil.V;
 public class MaxValue {
     // here I distort the description a bit, as I assume that the main thread does not count as a thread although in reality it does...
     public static void main(String[] args) {
+        final long startTime = System.nanoTime();
         for (int $ = 0; $ < 100000; $++) {
             final int[] array = new int[1000];
             Arrays.fill(array, new Random().nextInt(10000));
@@ -41,6 +42,8 @@ public class MaxValue {
                 throw new AssertionError("oops, multiThreadResult was " + multiThreadResult + " and serialResult was " + serialResult);
             }
         }
+        final long endTime = System.nanoTime();
+        System.out.println("took " + (endTime - startTime) + " that is " + (endTime - startTime + "").length() + " digits");
     }
 }
 
