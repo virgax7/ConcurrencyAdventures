@@ -1,4 +1,4 @@
-package random;
+package random.jcip;
 
 import java.math.BigInteger;
 import java.util.concurrent.ArrayBlockingQueue;

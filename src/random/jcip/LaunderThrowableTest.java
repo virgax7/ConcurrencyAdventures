@@ -1,4 +1,4 @@
-package random;
+package random.jcip;
 
 public class LaunderThrowableTest {
     public static void main(String[] args) {
