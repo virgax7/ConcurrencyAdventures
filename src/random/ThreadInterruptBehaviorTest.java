@@ -12,7 +12,6 @@ public class ThreadInterruptBehaviorTest {
         // uncomment to see this in action
 //        t1.start();
         t1.interrupt();
-        System.out.println("t1.join called");
 
         // Here is one that will actually stop the loop in the thread by using a polling system
         final Thread t2 = new Thread(() -> {
