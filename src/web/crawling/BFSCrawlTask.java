@@ -21,6 +21,10 @@ public class BFSCrawlTask implements Runnable {
     private final String pageBaseUrl;
     private final String fullUrl;
 
+    public String getFullUrl() {
+        return fullUrl;
+    }
+
     public BFSCrawlTask(final Consumer<String> otherTask, final String urlSubPath, final ConcurrentSkipListSet<String> visited,
                         final String searchStringRegex, final String hrefValueCandidate, final String pageBaseUrl, final ExecutorService exec) {
         this.otherTask = otherTask;

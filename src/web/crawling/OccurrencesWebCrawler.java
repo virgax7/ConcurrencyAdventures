@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -20,32 +22,30 @@ public class OccurrencesWebCrawler {
     // not too sure about this one...
     private static final double U_CPU = .5;
 
-    private final long searchDurationInSeconds;
     private final String regexOfTextOccurrence;
     private final String startSubPage;
     private final String pageBaseUrl;
     private final String hrefCandidate;
 
-    public ConcurrentMap<String, Integer> getCountMap() {
-        return countMap;
-    }
-
     private final ConcurrentMap<String, Integer> countMap = new ConcurrentHashMap<>();
     private final ConcurrentSkipListSet<String> visited = new ConcurrentSkipListSet<>();
     private final Consumer<String> occurrencesCounterConsumer = url -> countMap.put(url, countMap.getOrDefault(url, 0) + 1);
 
+    public Map<String, Integer> getCountMap() {
+        return Collections.unmodifiableMap(countMap);
+    }
+
     private static final int QUEUE_LIMIT = 30000;
 
-    public OccurrencesWebCrawler(final String regexOfTextOccurrence, final String startSubPage, final long searchDurationInSeconds, final String hrefCandidate, final String pageBaseUrl) throws IOException {
+    public OccurrencesWebCrawler(final String regexOfTextOccurrence, final String startSubPage, final String hrefCandidate, final String pageBaseUrl) throws IOException {
         this.regexOfTextOccurrence = regexOfTextOccurrence;
         this.startSubPage = startSubPage;
-        this.searchDurationInSeconds = searchDurationInSeconds;
         this.hrefCandidate = hrefCandidate;
         this.pageBaseUrl = pageBaseUrl;
 
         waitTimeOverComputeTime = calculateWaitTimeOverComputeTime(pageBaseUrl + startSubPage, regexOfTextOccurrence);
         magicNumberOfThreads = (int) Math.round(Runtime.getRuntime().availableProcessors() * U_CPU * (1 + waitTimeOverComputeTime));
-        exec = new WebCrawlerExecutor(new ThreadPoolExecutor(magicNumberOfThreads, magicNumberOfThreads, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(QUEUE_LIMIT)));
+        this.exec = new WebCrawlerExecutor(new ThreadPoolExecutor(magicNumberOfThreads, magicNumberOfThreads, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(QUEUE_LIMIT)));
     }
 
     private double calculateWaitTimeOverComputeTime(final String rootPage, final String searchStringRegex) throws IOException {
@@ -72,7 +72,7 @@ public class OccurrencesWebCrawler {
         return waitTime / totalComputeTime;
     }
 
-    public void start() {
+    public void start(final long searchDurationInSeconds) {
         exec.execute(new BFSCrawlTask(occurrencesCounterConsumer, startSubPage, visited, regexOfTextOccurrence, hrefCandidate, pageBaseUrl, exec));
         try {
             TimeUnit.SECONDS.sleep(searchDurationInSeconds);

@@ -15,10 +15,9 @@ public class FindMonstersInWikipedia {
             final OccurrencesWebCrawler crawler = new OccurrencesWebCrawler(
                     "(m|M)(o|O)(n|N)(s|S)(t|T)(e|E)(r|R)",
                     "/wiki/MapleStory",
-                    2,
                     "/wiki/(?!File|Wiki|Special)\\w+",
                     "https://en.wikipedia.org");
-            crawler.start();
+            crawler.start(2);
             System.out.println(crawler.getCountMap());
         } catch (IOException e) {
             e.printStackTrace();
