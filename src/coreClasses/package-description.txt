@@ -1,0 +1,2 @@
+walking through the core classes and how they work
+
