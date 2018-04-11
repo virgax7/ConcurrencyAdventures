@@ -23,8 +23,7 @@ public class AsyncServlet extends HttpServlet {
         asyncContext.setTimeout(timeout);
 
         System.out.println("Starting async thread for id : " + id);
-        new Thread(() -> asyncTask(curId, asyncContext)).start();
-
+        asyncContext.start(() -> asyncTask(curId, asyncContext));
     }
 
     private static void asyncTask(final int id, final AsyncContext asyncContext) {
