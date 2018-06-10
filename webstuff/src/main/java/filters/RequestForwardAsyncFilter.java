@@ -1,5 +1,7 @@
 package filters;
 
+import servlets.StackTraceUtil;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -9,6 +11,13 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RequestForwardAsyncFilter implements Filter {
+
+    public RequestForwardAsyncFilter() {
+        System.out.println("Now Intializing RequestForwardAsyncFilter from " + Thread.currentThread().getName());
+        System.out.println("The stacktrace is for RequestForwardAsyncilter() is:");
+        StackTraceUtil.printStack();
+    }
+
     private String name;
     private final AtomicInteger counter = new AtomicInteger(0);
 
